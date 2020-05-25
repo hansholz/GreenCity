@@ -2,6 +2,7 @@ package greencity.entity;
 
 import greencity.entity.localization.AdviceTranslation;
 import greencity.entity.localization.GoalTranslation;
+import greencity.entity.localization.TagTranslation;
 import java.util.List;
 import javax.persistence.*;
 import lombok.*;
@@ -22,6 +23,9 @@ public class Language {
 
     @Column(name = "code", nullable = false, unique = true, length = 35)
     private String code;
+
+    @OneToMany(mappedBy = "language", fetch = FetchType.LAZY)
+    private List<TagTranslation> tagTranslations;
 
     @OneToMany(mappedBy = "language", fetch = FetchType.LAZY)
     private List<AdviceTranslation> adviceTranslations;

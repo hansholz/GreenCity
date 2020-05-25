@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet id="taraskovaliv10" author="Kovaliv Taras">
+        <createTable tableName="tags_translation">
+            <column name="id" autoIncrement="0" type="BIGINT"/>
+            <column name="text" type="varchar(20)"/>
+            <column name="tag_id" type="BIGINT"/>
+            <column name="language_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="taraskovaliv11" author="Kovaliv Taras">
+        <dropColumn tableName="tags" columnName="name"/>
+        <addForeignKeyConstraint baseColumnNames="tag_id" baseTableName="tags_translation"
+                                 constraintName="FK_tags_tags_translation" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id"
+                                 referencedTableName="tags"/>
+        <addForeignKeyConstraint baseColumnNames="language_id" baseTableName="tags_translation"
+                                 constraintName="FK_language_tags_translation" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE"
+                                 referencedColumnNames="id" referencedTableName="languages"/>
+    </changeSet>
+</databaseChangeLog>
