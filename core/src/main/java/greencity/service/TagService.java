@@ -19,11 +19,11 @@ public interface TagService {
     Tag findByName(String name);
 
     /**
-     * Method that allow you to find all {@link Tag}.
+     * Method that allow you to find all {@link Tag} by language.
      *
      * @return list of {@link Tag}'s names
      */
-    List<String> findAll();
+    List<String> findAll(String language);
   
     /**
      * Method that allow you to check is valid all {@link Tag} by name.

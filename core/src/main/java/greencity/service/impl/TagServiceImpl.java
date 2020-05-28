@@ -2,6 +2,7 @@ package greencity.service.impl;
 
 import greencity.constant.ErrorMessage;
 import greencity.entity.Tag;
+import greencity.entity.localization.TagTranslation;
 import greencity.exception.exceptions.TagNotFoundException;
 import greencity.repository.TagRepo;
 import greencity.service.TagService;
@@ -39,13 +40,15 @@ public class TagServiceImpl implements TagService {
      * @return list of {@link Tag}'s names
      */
     @Override
-    public List<String> findAll() {
+    public List<String> findAll(String language) {
         return tagRepo.findAll().stream()
             .filter(tag -> !tag.getEcoNews().isEmpty())
-            .map(Tag::getName)
-            .collect(Collectors.toList());
+            .map(tag -> tag.getTranslations().stream()
+                .filter(tagTranslation -> tagTranslation.getLanguage().getCode().equals(language))
+                .map(TagTranslation::getName)
+                .collect(Collectors.toList());
     }
-      
+
     /**
      * {@inheritDoc}
      */
