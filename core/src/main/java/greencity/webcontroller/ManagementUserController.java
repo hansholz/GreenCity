@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/management")
 public class ManagementUserController {
     private UserService userService;
+    private ModelMapper modelMapper;
 
     /**
-     * Returns management page with all {@link User}.
+     * Method that returns management page with all {@link User}.
      *
      * @param model Model that will be configured and returned to user.
      * @param page  Page index you want to retrieve.
@@ -40,10 +41,11 @@ public class ManagementUserController {
     }
 
     /**
-     * Do.
+     * Method that updates user data.
      *
-     * @param userDto s.
-     * @return sds.
+     * @param userDto dto with updated fields.
+     * @return View template path {@link String}.
+     * @author Vasyl Zhovnir
      */
     @PostMapping("/update")
     public String updateUser(UserForListDto userDto) {
@@ -52,15 +54,15 @@ public class ManagementUserController {
     }
 
     /**
-     * Do.
+     * Method for finding {@link User} by id.
      *
-     * @param id s.
-     * @return sds.
+     * @param id of the searched {@link User}.
+     * @return dto {@link UserForListDto} of the {@link User}.
+     * @author Vasyl Zhovnir
      */
     @GetMapping("/findById")
     @ResponseBody
     public UserForListDto findById(Long id) {
-        ModelMapper modelMapper = new ModelMapper();
         User byId = userService.findById(id);
         return modelMapper.map(byId, UserForListDto.class);
     }

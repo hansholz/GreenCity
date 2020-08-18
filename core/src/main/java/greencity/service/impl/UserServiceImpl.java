@@ -138,16 +138,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUser(UserForListDto dto) {
-        User user = userRepo.findById(dto.getId()).get();
+        User user = findById(dto.getId());
         updateUserFromDto(dto, user);
         userRepo.save(user);
     }
 
     /**
-     * Do.
+     * Method for setting data from {@link UserForListDto} to {@link User}.
      *
-     * @param dto s.
-     * @return sds.
+     * @param dto  - dto {@link UserForListDto} with updated fields.
+     * @param user {@link User} to be updated.
+     * @author Vasyl Zhovnir
      */
     private void updateUserFromDto(UserForListDto dto, User user) {
         user.setName(dto.getName());

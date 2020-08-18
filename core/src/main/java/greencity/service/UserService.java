@@ -68,7 +68,7 @@ public interface UserService {
     /**
      * Method that allows you to update {@link User} by dto.
      *
-     * @param dto - dto {@link UserForListDto} for updating {@link User}.
+     * @param dto - dto {@link UserForListDto} with updated fields for updating {@link User}.
      * @author Vasyl Zhovnir
      */
     void updateUser(UserForListDto dto);
