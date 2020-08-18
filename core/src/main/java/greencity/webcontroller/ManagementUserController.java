@@ -1,15 +1,17 @@
 package greencity.webcontroller;
 
+import greencity.dto.user.UserForListDto;
 import greencity.entity.User;
+import greencity.entity.enums.UserStatus;
 import greencity.service.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.thymeleaf.expression.Numbers;
 
 @Controller
 @AllArgsConstructor
@@ -33,19 +35,20 @@ public class ManagementUserController {
         Pageable paging = PageRequest.of(page, size, Sort.by("id").descending());
         model.addAttribute("users", userService.findByPage(paging));
         model.addAttribute("currentPage", page);
+        model.addAttribute("allTypes", UserStatus.values());
         return "core/management_users_list";
     }
 
     /**
      * Do.
      *
-     * @param user s.
+     * @param userDto s.
      * @return sds.
      */
-    @PostMapping("/save")
-    public String saveUser(User user) {
-        userService.save(user);
-        return "redirect:management/users";
+    @PostMapping("/update")
+    public String updateUser(UserForListDto userDto) {
+        userService.updateUser(userDto);
+        return "redirect:/management/users";
     }
 
     /**
@@ -56,7 +59,9 @@ public class ManagementUserController {
      */
     @GetMapping("/findById")
     @ResponseBody
-    public User findById(Long id) {
-        return userService.findById(id);
+    public UserForListDto findById(Long id) {
+        ModelMapper modelMapper = new ModelMapper();
+        User byId = userService.findById(id);
+        return modelMapper.map(byId, UserForListDto.class);
     }
 }

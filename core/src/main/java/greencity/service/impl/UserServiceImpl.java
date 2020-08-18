@@ -1,7 +1,6 @@
 package greencity.service.impl;
 
 import greencity.constant.ErrorMessage;
-import static greencity.constant.ErrorMessage.*;
 import greencity.constant.LogMessage;
 import greencity.dto.PageableDto;
 import greencity.dto.filter.FilterUserDto;
@@ -20,10 +19,10 @@ import greencity.entity.localization.GoalTranslation;
 import greencity.exception.exceptions.*;
 import greencity.repository.*;
 import greencity.repository.options.UserFilter;
-import greencity.service.*;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import greencity.service.FileService;
+import greencity.service.HabitDictionaryService;
+import greencity.service.HabitService;
+import greencity.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -34,6 +33,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static greencity.constant.ErrorMessage.*;
 
 /**
  * The class provides implementation of the {@code UserService}.
@@ -126,6 +131,29 @@ public class UserServiceImpl implements UserService {
         log.info(LogMessage.IN_FIND_ID_BY_EMAIL, email);
         return userRepo.findIdByEmail(email).orElseThrow(
             () -> new WrongEmailException(ErrorMessage.USER_NOT_FOUND_BY_EMAIL));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateUser(UserForListDto dto) {
+        User user = userRepo.findById(dto.getId()).get();
+        updateUserFromDto(dto, user);
+        userRepo.save(user);
+    }
+
+    /**
+     * Do.
+     *
+     * @param dto s.
+     * @return sds.
+     */
+    private void updateUserFromDto(UserForListDto dto, User user) {
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setUserCredo(dto.getUserCredo());
+        user.setUserStatus(dto.getUserStatus());
     }
 
     /**
