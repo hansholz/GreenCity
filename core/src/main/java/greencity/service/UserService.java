@@ -71,7 +71,7 @@ public interface UserService {
      * @param dto - dto {@link UserForListDto} with updated fields for updating {@link User}.
      * @author Vasyl Zhovnir
      */
-    void updateUser(UserForListDto dto);
+    void updateUser(UserManagementDto dto);
 
     /**
      * Update {@code ROLE} of user.
@@ -352,4 +352,13 @@ public interface UserService {
      * @author Marian Datsko
      */
     UserProfileStatisticsDto getUserProfileStatistics(Long userId);
+
+    /**
+     * Find {@link User} for management by page .
+     *
+     * @param pageable a value with pageable configuration.
+     * @return a dto of {@link PageableDto}.
+     * @author Vasyl Zhovnir
+     */
+    PageableDto<UserManagementDto> findUserForManagementByPage(Pageable pageable);
 }
