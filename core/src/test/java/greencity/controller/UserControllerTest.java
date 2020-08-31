@@ -26,8 +26,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.security.Principal;
@@ -109,10 +113,6 @@ class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(content))
             .andExpect(status().isOk());
-
-        ObjectMapper mapper = new ObjectMapper();
-        UserRoleDto userRoleDto =
-            mapper.readValue(content, UserRoleDto.class);
 
         verify(userService).updateRole(eq(1L), eq(ROLE.ROLE_USER), eq("testmail@gmail.com"));
     }
@@ -492,7 +492,22 @@ class UserControllerTest {
             "\t\"showEcoPlace\": true,\n" +
             "\t\"showShoppingList\": false\n" +
             "}";
+
         MockMultipartFile jsonFile = new MockMultipartFile("userProfileDtoRequest", "", "application/json", json.getBytes());
+
+//        MockMultipartHttpServletRequestBuilder builder =
+//            MockMvcRequestBuilders.multipart(userLink + "/profile");
+//        builder.with(request -> {
+//            request.setMethod("PUT");
+//            return request;
+//        });
+//
+//        this.mockMvc.perform(builder.
+//            file(jsonFile)
+//            .principal(principal)
+//            .accept(MediaType.APPLICATION_JSON)
+//            .contentType(MediaType.APPLICATION_JSON))
+//            .andExpect(status().isCreated());
 
         this.mockMvc.perform(multipart(userLink + "/profile")
             .file(jsonFile)
