@@ -49,7 +49,11 @@ public class RatingCalculationAspect {
         log.info("ratingCalculation Authentication.Get name: " + authentication.getName());
         log.info("ratingCalculation User name: " + user.getName());
         RatingCalculationEnum rating = ratingCalculation.rating();
-        user.setRating(user.getRating() + rating.getRatingPoints());
+        Float rating1 = user.getRating();
+        log.info("ratingCalculation user.getRating(): " + rating1);
+        float ratingPoints = rating.getRatingPoints();
+        log.info("ratingCalculation rating.getRatingPoints(): " + ratingPoints);
+        user.setRating(rating1 + ratingPoints);
         userService.save(user);
     }
 }
