@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiResponses;
 import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+@Slf4j
 @Validated
 @RestController
 @RequestMapping("/econews")
@@ -45,9 +47,9 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Get three last eco news.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @GetMapping("/newest")
     public ResponseEntity<List<EcoNewsDto>> getThreeLastEcoNews() {
@@ -65,21 +67,23 @@ public class EcoNewsController {
 
     @ApiOperation(value = "Add new eco news.")
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = HttpStatuses.CREATED,
-                    response = AddEcoNewsDtoResponse.class),
-            @ApiResponse(code = 303, message = HttpStatuses.SEE_OTHER),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 201, message = HttpStatuses.CREATED,
+            response = AddEcoNewsDtoResponse.class),
+        @ApiResponse(code = 303, message = HttpStatuses.SEE_OTHER),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AddEcoNewsDtoResponse> save(
-            @ApiParam(value = SwaggerExampleModel.addEcoNewsRequest, required = true)
-            @RequestPart @ValidEcoNewsDtoRequest AddEcoNewsDtoRequest addEcoNewsDtoRequest,
-            @ApiParam(value = "Image of eco news")
-            @ImageValidation
-            @RequestPart(required = false) MultipartFile image,
-            @ApiIgnore Principal principal) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-                ecoNewsService.save(addEcoNewsDtoRequest, image, principal.getName()));
+        @ApiParam(value = SwaggerExampleModel.addEcoNewsRequest, required = true)
+        @RequestPart @ValidEcoNewsDtoRequest AddEcoNewsDtoRequest addEcoNewsDtoRequest,
+        @ApiParam(value = "Image of eco news")
+        @ImageValidation
+        @RequestPart(required = false) MultipartFile image,
+        @ApiIgnore Principal principal) {
+        ResponseEntity<AddEcoNewsDtoResponse> body = ResponseEntity.status(HttpStatus.CREATED).body(
+            ecoNewsService.save(addEcoNewsDtoRequest, image, principal.getName()));
+        log.info("Method save Principal.name" + principal.getName());
+        return body;
     }
 
     /**
@@ -90,9 +94,9 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Get eco news by id.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @GetMapping("/{id}")
     public ResponseEntity<EcoNewsDto> getEcoNewsById(@PathVariable Long id) {
@@ -107,9 +111,9 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Find all eco news by page.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @GetMapping("")
     @ApiPageable
@@ -126,10 +130,10 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Delete eco news.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 303, message = HttpStatuses.SEE_OTHER),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN)
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 303, message = HttpStatuses.SEE_OTHER),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN)
     })
     @DeleteMapping("/{econewsId}")
     public ResponseEntity<Object> delete(@PathVariable Long econewsId) {
@@ -145,20 +149,20 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Get eco news by tags")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @GetMapping("/tags")
     @ApiPageable
     public ResponseEntity<PageableDto<EcoNewsDto>> getEcoNews(
-            @ApiIgnore Pageable page,
-            @ApiParam(value = "Tags to filter (if do not input tags get all)")
-            @RequestParam(required = false) List<String> tags
+        @ApiIgnore Pageable page,
+        @ApiParam(value = "Tags to filter (if do not input tags get all)")
+        @RequestParam(required = false) List<String> tags
     ) {
         if (tags == null || tags.isEmpty()) {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    ecoNewsService.findAll(page));
+                ecoNewsService.findAll(page));
         }
         return ResponseEntity.status(HttpStatus.OK).body(ecoNewsService.find(page, tags));
     }
@@ -171,13 +175,13 @@ public class EcoNewsController {
      */
     @ApiOperation(value = "Get three recommended eco news.")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = HttpStatuses.OK),
-            @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
-            @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
+        @ApiResponse(code = 200, message = HttpStatuses.OK),
+        @ApiResponse(code = 400, message = HttpStatuses.BAD_REQUEST),
+        @ApiResponse(code = 403, message = HttpStatuses.FORBIDDEN),
     })
     @GetMapping("/recommended")
     public ResponseEntity<List<EcoNewsDto>> getThreeRecommendedEcoNews(
-            @RequestParam(required = true) Long openedEcoNewsId
+        @RequestParam(required = true) Long openedEcoNewsId
 
     ) {
         List<EcoNewsDto> threeRecommendedEcoNews = ecoNewsService.getThreeRecommendedEcoNews(openedEcoNewsId);

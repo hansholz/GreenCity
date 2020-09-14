@@ -45,8 +45,10 @@ public class RatingCalculationAspect {
     private void ratingCalculation(RatingCalculation ratingCalculation) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByEmail(authentication.getName());
+        log.info("ratingCalculation Authentication: " + authentication);
+        log.info("ratingCalculation Authentication.Get name: " + authentication.getName());
+        log.info("ratingCalculation User name: " + user.getName());
         RatingCalculationEnum rating = ratingCalculation.rating();
-
         user.setRating(user.getRating() + rating.getRatingPoints());
         userService.save(user);
     }
