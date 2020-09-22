@@ -106,8 +106,8 @@ stages:
 - stage: StartingTestAppServices
   jobs:
     - job: Starting
-    pool:
-      vmImage: $(agentOS)
+      pool:
+        vmImage: $(agentOS)
       steps:
         - task: AzureAppServiceManage@0
           inputs:
