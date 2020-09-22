@@ -181,6 +181,8 @@ stages:
 - stage: StoppingTestAppServices
   jobs:
     - job: Stopping
+      pool:
+        vmImage: $(agentOS)
       steps:
         - task: AzureAppServiceManage@0
           inputs:
