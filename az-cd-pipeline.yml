@@ -178,22 +178,22 @@ stages:
                 ResourceGroupName: '$(resourceGroup)'
                 packageForLinux: '$(System.ArtifactsDirectory)/$(artifactName)/$(mailRepoName)/target/$(onbootJarName)'
 
-# - stage: StoppingTestAppServices
-#   jobs:
-#     - job: Stopping
-#       steps:
-#         - task: AzureAppServiceManage@0
-#           inputs:
-#             azureSubscription: '$(azureSub)'
-#             action: 'Stop Azure App Service'
-#             webAppName: '$(TestcoreServiceName)'
-#             ResourceGroupName: '$(resourceGroup)'
-#         - task: AzureAppServiceManage@0
-#           inputs:
-#             azureSubscription: '$(azureSub)'
-#             action: 'Stop Azure App Service'
-#             webAppName: '$(TestmailServiceName)'
-#             ResourceGroupName: '$(resourceGroup)'
+- stage: StoppingTestAppServices
+  jobs:
+    - job: Stopping
+      steps:
+        - task: AzureAppServiceManage@0
+          inputs:
+            azureSubscription: '$(azureSub)'
+            action: 'Stop Azure App Service'
+            webAppName: '$(TestcoreServiceName)'
+            ResourceGroupName: '$(resourceGroup)'
+        - task: AzureAppServiceManage@0
+          inputs:
+            azureSubscription: '$(azureSub)'
+            action: 'Stop Azure App Service'
+            webAppName: '$(TestmailServiceName)'
+            ResourceGroupName: '$(resourceGroup)'
 
 # - stage: Deploy
 #   jobs:
